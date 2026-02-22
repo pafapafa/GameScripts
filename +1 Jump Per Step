@@ -1,0 +1,154 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local remotes = ReplicatedStorage:WaitForChild("Remotes")
+local stepRemote = remotes:WaitForChild("Functions"):WaitForChild("StepRemote")
+local rebirthEvent = remotes:WaitForChild("Events"):WaitForChild("RebirthRemote")
+local Players = game:GetService("Players")
+local lp = Players.LocalPlayer
+
+local multiplierValue = 1
+
+local mt = getrawmetatable(game)
+local old = mt.__newindex
+setreadonly(mt, false)
+
+mt.__newindex = newcclosure(function(self, key, value)
+    if tostring(self) == "MultiplierLabel" and key == "Text" then
+        return old(self, key, tostring(multiplierValue) .. "x Jump Multiplier")
+    end
+    return old(self, key, value)
+end)
+
+setreadonly(mt, true)
+
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local rollEvent = ReplicatedStorage:WaitForChild("Remotes")
+    :WaitForChild("Events")
+    :WaitForChild("RollVisualFinished")
+local selectedName = "67"
+
+local Window = Rayfield:CreateWindow({
+    Name = "+1 Jump Per Step Script",
+    LoadingTitle = "+1 Jump Per Step Script",
+    LoadingSubtitle = "by 파",
+    ConfigurationSaving = {
+        Enabled = false
+    }
+})
+
+local Tab = Window:CreateTab("Main", 4483362458)
+local FarmTab = Window:CreateTab("Auto Farm", 4483362458)
+
+Tab:CreateDropdown({
+    Name = "Select Aura",
+    Options = {"Stingy","Volt","Shiny","Flame","Crimson","Bee Head","67","Violet Pulse","Blaze","Blood Ring"},
+    CurrentOption = {"67"},
+    Callback = function(option)
+        if typeof(option) == "table" then
+            selectedName = option[1]
+        else
+            selectedName = option
+        end
+    end
+})
+
+local amountValue = 0
+
+Tab:CreateInput({
+    Name = "Aura Multiplier",
+    PlaceholderText = "숫자 입력",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(text)
+        local num = tonumber(text)
+        if num and num > 0 then
+            amountValue = num
+            multiplierValue = num
+
+            local playerGui = lp:FindFirstChild("PlayerGui")
+            if playerGui then
+                for _, v in ipairs(playerGui:GetDescendants()) do
+                    if v:IsA("TextLabel") and string.find(v.Text, "Jump Multiplier") then
+                        v.Text = multiplierValue .. "x Jump Multiplier"
+                    end
+                end
+            end
+        end
+    end
+})
+
+Tab:CreateButton({
+    Name = "Execute",
+    Callback = function()
+        if amountValue == 0 then return end
+
+        pcall(function()
+            rollEvent:FireServer(selectedName, amountValue)
+        end)
+
+        local playerGui = lp:FindFirstChild("PlayerGui")
+        if playerGui then
+            local auraGui = playerGui:FindFirstChild("AuraGui")
+            if auraGui then
+                local auraLabel = auraGui:FindFirstChild("AuraLabel", true)
+                if auraLabel and auraLabel:IsA("TextLabel") then
+                    auraLabel.Text = selectedName
+                end
+            end
+        end
+    end
+})
+
+local rainbowEnabled = true
+
+task.spawn(function()
+    while rainbowEnabled do
+        task.wait(0.01)
+
+        local playerGui = lp:FindFirstChild("PlayerGui")
+        if playerGui then
+            for _, v in ipairs(playerGui:GetDescendants()) do
+                if v:IsA("TextLabel") and string.find(v.Text, "Jump Multiplier") then
+                    local hue = tick() % 5 / 5
+                    v.TextColor3 = Color3.fromHSV(hue, 1, 1)
+                end
+            end
+        end
+    end
+end)
+
+local autoFarm = false
+
+FarmTab:CreateToggle({
+    Name = "Auto Farm",
+    CurrentValue = false,
+    Callback = function(state)
+        autoFarm = state
+
+        if autoFarm then
+
+            task.spawn(function()
+                while autoFarm do
+                    task.wait()
+                    pcall(function()
+                        stepRemote:InvokeServer(false)
+                    end)
+                end
+            end)
+
+            task.spawn(function()
+                while autoFarm do
+                    task.wait()
+                    pcall(function()
+                        rebirthEvent:FireServer()
+                    end)
+                end
+            end)
+
+            pcall(function()
+                rollEvent:FireServer("67", math.huge)
+            end)
+
+        end
+    end
+})
