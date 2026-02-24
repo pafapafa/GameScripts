@@ -12,10 +12,10 @@ local GameId = game.GameId
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
-if GameId == 83546274297199 then
+if GameId == 8362507239 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/Jump%20Map%20Power%20Level%20Test"))()
 
-elseif GameId == 108057513655537 then
+elseif GameId == 9409415054 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/%2B1%20Jump%20Per%20Step"))()
 
 else
