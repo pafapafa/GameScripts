@@ -1,11 +1,17 @@
-local placeId = game.PlaceId
+if queue_on_teleport then
+    queue_on_teleport([[
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/Loader.lua"))()
+    ]])
+end
+
+local PlaceId = game.PlaceId
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
-if placeId == 83546274297199 then
+if PlaceId == 83546274297199 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/refs/heads/main/Jump%20Map%20Power%20Level%20Test"))()
 
-elseif placeId == 108057513655537 then
+elseif PlaceId == 108057513655537 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/refs/heads/main/%2B1%20Jump%20Per%20Step"))()
 
 else
