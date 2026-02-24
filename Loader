@@ -2,7 +2,6 @@ if not getgenv().TeleportQueued then
     getgenv().TeleportQueued = true
 
     local teleportFunc = queue_on_teleport 
-        or (syn and syn.queue_on_teleport)
 
     if teleportFunc then
         teleportFunc([[
