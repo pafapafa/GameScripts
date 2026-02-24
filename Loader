@@ -6,6 +6,8 @@ Rayfield:Notify({
     Duration = 6
 })
 
+task.wait(3)
+
 if not getgenv().TeleportQueued then
     getgenv().TeleportQueued = true
 
