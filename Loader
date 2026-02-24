@@ -1,13 +1,3 @@
-local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
-
-Rayfield:Notify({
-    Title = "로블록스 최고의 커뮤니티",
-    Content = "https://discord.gg/localx",
-    Duration = 6
-})
-
-task.wait(3)
-
 if not getgenv().TeleportQueued then
     getgenv().TeleportQueued = true
 
