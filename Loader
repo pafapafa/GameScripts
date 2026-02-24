@@ -1,16 +1,18 @@
 if not getgenv().TeleportQueued then
     getgenv().TeleportQueued = true
 
-    if queue_on_teleport then
-        queue_on_teleport([[
+    local teleportFunc = queue_on_teleport 
+        or (syn and syn.queue_on_teleport)
+
+    if teleportFunc then
+        teleportFunc([[
             loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/Loader"))()
         ]])
     end
 end
 
 local GameId = game.GameId
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
+local LocalPlayer = game:GetService("Players").LocalPlayer
 
 if GameId == 8362507239 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/Jump%20Map%20Power%20Level%20Test"))()
