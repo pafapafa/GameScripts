@@ -10,6 +10,27 @@ if not getgenv().TeleportQueued then
     end
 end
 
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+    Name = "Key System",
+    LoadingTitle = "Key System",
+    LoadingSubtitle = "Key System",
+    ConfigurationSaving = {
+        Enabled = false
+    },
+    KeySystem = true,
+    KeySettings = {
+        Title = "Key System",
+        Subtitle = "Enter Key",
+        Note = "",
+        FileName = "Key",
+        SaveKey = false,
+        GrabKeyFromSite = false,
+        Key = {"LocalXOnTop"}
+    }
+})
+
 local GameId = game.GameId
 local LocalPlayer = game:GetService("Players").LocalPlayer
 
