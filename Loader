@@ -1,6 +1,6 @@
 if queue_on_teleport then
     queue_on_teleport([[
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/Loader.lua"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/refs/heads/main/Loader"))()
     ]])
 end
 
