@@ -1,3 +1,11 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+Rayfield:Notify({
+    Title = "로블록스 최고의 커뮤니티",
+    Content = "https://discord.gg/localx",
+    Duration = 6
+})
+
 if not getgenv().TeleportQueued then
     getgenv().TeleportQueued = true
 
@@ -25,11 +33,3 @@ elseif GameId == 9294646427 then
 else
     LocalPlayer:Kick("Not Support Game")
 end
-
-local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
-
-Rayfield:Notify({
-    Title = "로블록스 최고의 커뮤니티",
-    Content = "https://discord.gg/localx",
-    Duration = 6
-})
