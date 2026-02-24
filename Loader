@@ -10,27 +10,6 @@ if not getgenv().TeleportQueued then
     end
 end
 
-local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
-
-local Window = Rayfield:CreateWindow({
-    Name = "Key System",
-    LoadingTitle = "Key System",
-    LoadingSubtitle = "Key System",
-    ConfigurationSaving = {
-        Enabled = false
-    },
-    KeySystem = true,
-    KeySettings = {
-        Title = "Key System",
-        Subtitle = "Enter Key",
-        Note = "",
-        FileName = "Key",
-        SaveKey = false,
-        GrabKeyFromSite = false,
-        Key = {"LocalXOnTop"}
-    }
-})
-
 local GameId = game.GameId
 local LocalPlayer = game:GetService("Players").LocalPlayer
 
@@ -46,3 +25,19 @@ elseif GameId == 9294646427 then
 else
     LocalPlayer:Kick("Not Support Game")
 end
+
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+    Name = "LocalXOnTop",
+    LoadingTitle = "LocalXOnTop",
+    LoadingSubtitle = "Loader",
+    ConfigurationSaving = { Enabled = false }
+})
+
+Rayfield:Notify({
+    Title = "로블록스 최고의 커뮤니티",
+    Content = "https://discord.gg/localx",
+    Duration = 6,
+    Image = 4483362458
+})
