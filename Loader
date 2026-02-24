@@ -28,16 +28,8 @@ end
 
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
-local Window = Rayfield:CreateWindow({
-    Name = "LocalXOnTop",
-    LoadingTitle = "LocalXOnTop",
-    LoadingSubtitle = "Loader",
-    ConfigurationSaving = { Enabled = false }
-})
-
 Rayfield:Notify({
     Title = "로블록스 최고의 커뮤니티",
     Content = "https://discord.gg/localx",
-    Duration = 6,
-    Image = 4483362458
+    Duration = 6
 })
