@@ -1,3 +1,20 @@
+local executorName = nil
+
+if getexecutorname then
+    executorName = getexecutorname()
+elseif identifyexecutor then
+    executorName = identifyexecutor()
+end
+
+if executorName then
+    executorName = string.lower(executorName)
+
+    if string.find(executorName, "Solara") or string.find(executorName, "Xeno") then
+        LocalPlayer:Kick("Executor Not Allowed")
+        return
+    end
+end
+
 if not getgenv().TeleportQueued then
     getgenv().TeleportQueued = true
 
