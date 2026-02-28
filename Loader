@@ -22,6 +22,9 @@ elseif GameId == 9294646427 then
 elseif GameId == 4552793904 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/Effortless%20Tower"))()
 
+elseif GameId == 7290067958 then
+    loadstring(game:HttpGet(""))()
+
 elseif GameId == 8127951408 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/Stage"))()
 
