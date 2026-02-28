@@ -26,7 +26,7 @@ local function checkStatus()
         res = string.gsub(string.lower(res), "%s+", "")
         if res ~= "true" then
             LocalPlayer:Kick("Script Disabled")
-            while true do end -- 완전 정지
+            while true do end
         end
     else
         LocalPlayer:Kick("Status Check Failed")
