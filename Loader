@@ -15,7 +15,7 @@ local LocalPlayer = game:GetService("Players").LocalPlayer
 
 --
 
-local STATUS_URL = "https://raw.githubusercontent.com/너아이디/레포이름/main/status.txt"
+local STATUS_URL = "https://raw.githubusercontent.com/pafapafa/GameScripts/main/Status"
 
 local function checkStatus()
     local ok, res = pcall(function()
