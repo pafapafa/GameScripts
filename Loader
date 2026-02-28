@@ -20,10 +20,10 @@ elseif GameId == 9294646427 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/Bobsled%20Ride%20Down%20a%20Mountainside"))()
 
 elseif GameId == 4552793904 then
-    sss
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/Effortless%20Tower"))()
 
 elseif GameId == 8127951408 then
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/Stage%20Teleporter"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/Stage"))()
 
 else
     LocalPlayer:Kick("Not Support Game")
