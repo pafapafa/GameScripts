@@ -13,6 +13,37 @@ end
 local GameId = game.GameId
 local LocalPlayer = game:GetService("Players").LocalPlayer
 
+--
+
+local STATUS_URL = "https://raw.githubusercontent.com/너아이디/레포이름/main/status.txt"
+
+local function checkStatus()
+    local ok, res = pcall(function()
+        return game:HttpGet(STATUS_URL)
+    end)
+
+    if ok then
+        res = string.gsub(string.lower(res), "%s+", "")
+        if res ~= "true" then
+            LocalPlayer:Kick("Script Disabled")
+            while true do end -- 완전 정지
+        end
+    else
+        LocalPlayer:Kick("Status Check Failed")
+    end
+end
+
+checkStatus()
+
+task.spawn(function()
+    while true do
+        task.wait(1)
+        checkStatus()
+    end
+end)
+
+--
+
 if GameId == 9409415054 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/%2B1%20Jump%20Per%20Step"))()
 
