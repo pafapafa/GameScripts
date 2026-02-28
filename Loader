@@ -16,19 +16,27 @@ local LocalPlayer = game:GetService("Players").LocalPlayer
 --
 
 local STATUS_URL = "https://raw.githubusercontent.com/pafapafa/GameScripts/main/Status"
+local LocalPlayer = game:GetService("Players").LocalPlayer
+
+local disabled = false
 
 local function checkStatus()
+    if disabled then return end
+
     local ok, res = pcall(function()
         return game:HttpGet(STATUS_URL)
     end)
 
     if ok then
         res = string.gsub(string.lower(res), "%s+", "")
+        print("STATUS:", "["..res.."]")
+
         if res ~= "true" then
+            disabled = true
             LocalPlayer:Kick("Script Disabled")
-            while true do end
         end
     else
+        disabled = true
         LocalPlayer:Kick("Status Check Failed")
     end
 end
@@ -36,7 +44,7 @@ end
 checkStatus()
 
 task.spawn(function()
-    while true do
+    while not disabled do
         task.wait(1)
         checkStatus()
     end
