@@ -25,7 +25,7 @@ elseif GameId == 4552793904 then
 elseif GameId == 7290067958 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/Double%20Jump%20Tower"))()
 
-elseif GameId == 9294646427 then
+elseif GameId == 8362507239 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/Bobsled%20Ride%20Down%20a%20Mountainside"))()
 
 elseif GameId == 8127951408 then
