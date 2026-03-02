@@ -1,0 +1,57 @@
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+
+if _G.TPUA_FRONT then
+    _G.TPUA_FRONT:Disconnect()
+end
+
+local player = Players.LocalPlayer
+local root = nil
+
+local TARGET_DISTANCE = 5
+local SPREAD = 10
+local SEARCH_LIMIT = 10000
+
+local function updateCharacter(char)
+    root = char:WaitForChild("HumanoidRootPart", 5)
+end
+
+if player.Character then
+    updateCharacter(player.Character)
+end
+
+player.CharacterAdded:Connect(updateCharacter)
+
+_G.TPUA_FRONT = RunService.Heartbeat:Connect(function()
+    if not root or not root.Parent then return end
+
+    local targetPos = root.Position + root.CFrame.LookVector * TARGET_DISTANCE
+
+    for _, obj in ipairs(workspace:GetDescendants()) do
+        if not obj:IsA("BasePart") then
+            continue
+        end
+        
+        if obj.Anchored then
+            continue
+        end
+
+        if (obj.Position - root.Position).Magnitude > SEARCH_LIMIT then
+            continue
+        end
+
+        local model = obj:FindFirstAncestorOfClass("Model")
+        if model and Players:GetPlayerFromCharacter(model) then
+            continue
+        end
+
+        obj.AssemblyLinearVelocity = Vector3.zero
+        obj.AssemblyAngularVelocity = Vector3.zero
+
+        obj.CFrame = CFrame.new(targetPos + Vector3.new(
+            math.random(-SPREAD, SPREAD),
+            math.random(-2, 5),
+            math.random(-SPREAD, SPREAD)
+        ))
+    end
+end)
