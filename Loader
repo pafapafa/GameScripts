@@ -40,6 +40,9 @@ elseif GameId == 6147276975 then
 elseif GameId == 8883775493 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/Build%20a%20Roller%20Coaster"))()
 
+eldeif GameId == 3310460039 then
+    loadstring(game:HttpGet(""))()
+
 elseif GameId == 8127951408 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/Stage"))()
 
