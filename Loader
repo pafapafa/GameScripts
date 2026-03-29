@@ -37,7 +37,7 @@ elseif GameId == 3864279452 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/cart%20ride%20around%20nothing"))()
 
 elseif GameId == 8360491918 then
-    loadstring(game:HttpGet(""))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/Korea%20Army"))()
 
 elseif GameId == 6147276975 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/Drive%20the%20train%20to%20the%20end"))()
