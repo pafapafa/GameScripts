@@ -54,6 +54,8 @@ elseif GameId == 2027832238 then
 elseif GameId == 8127951408 then
     loadstring(game:HttpGet'https://raw.githubusercontent.com/pafapafa/GameScripts/main/Stage')()
 
+elseif GameId == 9584852943 then
+    loadstring(game:HttpGet'https://raw.githubusercontent.com/pafapafa/GameScripts/refs/heads/main/%2B1%20Speed%20Keyboard%20Escape')()
 else
     LocalPlayer:Kick("Not Support Game")
 end
