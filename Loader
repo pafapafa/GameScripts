@@ -1,61 +1,146 @@
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
+return nil;
+
 if not getgenv().TeleportQueued then
     getgenv().TeleportQueued = true
-
     local teleportFunc = queue_on_teleport or (syn and syn.queue_on_teleport)
-
     if teleportFunc then
-        teleportFunc([[
-            loadstring(game:HttpGet'https://raw.githubusercontent.com/pafapafa/GameScripts/main/Loader')()
-        ]])
+        teleportFunc([[loadstring(game:HttpGet'https://raw.githubusercontent.com/pafapafa/GameScripts/main/Loader')()]])
     end
 end
 
 loadstring(game:HttpGet'https://raw.githubusercontent.com/pafapafa/GameScripts/main/PAFA')()
 
+local GameScripts = {
+    [9409415054] = "%2B1%20Jump%20Per%20Step",
+    [9294646427] = "Bobsled%20Ride%20Down%20a%20Mountainside",
+    [4552793904] = "Effortless%20Tower",
+    [7290067958] = "Double%20Jump%20Tower",
+    [8362507239] = "Jump%20Map%20Power%20Level%20Test",
+    [7621512836] = "Circular%20Tower",
+    [3864279452] = "cart%20ride%20around%20nothing",
+    [8360491918] = "Korea%20Army",
+    [6147276975] = "Drive%20the%20train%20to%20the%20end",
+    [8883775493] = "Build%20a%20Roller%20Coaster",
+    [3310460039] = "BARRY'S%20PRISON%20RUN!%20(OBBY)",
+    [2027832238] = "MMK",
+    [8127951408] = "Stage",
+    [9584852943] = "%2B1%20Speed%20Keyboard%20Escape"
+}
+
 local GameId = game.GameId
 local LocalPlayer = game:GetService("Players").LocalPlayer
+local ScriptName = GameScripts[GameId]
 
-if GameId == 9409415054 then
-    loadstring(game:HttpGet'https://raw.githubusercontent.com/pafapafa/GameScripts/main/%2B1%20Jump%20Per%20Step')()
-
-elseif GameId == 9294646427 then
-    loadstring(game:HttpGet'https://raw.githubusercontent.com/pafapafa/GameScripts/main/Bobsled%20Ride%20Down%20a%20Mountainside')()
-
-elseif GameId == 4552793904 then
-    loadstring(game:HttpGet'https://raw.githubusercontent.com/pafapafa/GameScripts/main/Effortless%20Tower')()
-
-elseif GameId == 7290067958 then
-    loadstring(game:HttpGet'https://raw.githubusercontent.com/pafapafa/GameScripts/main/Double%20Jump%20Tower')()
-
-elseif GameId == 8362507239 then
-    loadstring(game:HttpGet'https://raw.githubusercontent.com/pafapafa/GameScripts/main/Jump%20Map%20Power%20Level%20Test')()
-
-elseif GameId == 7621512836 then
-    loadstring(game:HttpGet'https://raw.githubusercontent.com/pafapafa/GameScripts/main/Circular%20Tower')()
-
-elseif GameId == 3864279452 then
-    loadstring(game:HttpGet'https://raw.githubusercontent.com/pafapafa/GameScripts/main/cart%20ride%20around%20nothing')()
-
-elseif GameId == 8360491918 then
-    loadstring(game:HttpGet'https://raw.githubusercontent.com/pafapafa/GameScripts/main/Korea%20Army')()
-
-elseif GameId == 6147276975 then
-    loadstring(game:HttpGet'https://raw.githubusercontent.com/pafapafa/GameScripts/main/Drive%20the%20train%20to%20the%20end')()
-
-elseif GameId == 8883775493 then
-    loadstring(game:HttpGet'https://raw.githubusercontent.com/pafapafa/GameScripts/main/Build%20a%20Roller%20Coaster')()
-
-elseif GameId == 3310460039 then
-    loadstring(game:HttpGet[[https://raw.githubusercontent.com/pafapafa/GameScripts/main/BARRY'S%20PRISON%20RUN!%20(OBBY)]])()
-
-elseif GameId == 2027832238 then
-    loadstring(game:HttpGet'https://raw.githubusercontent.com/pafapafa/GameScripts/main/MMK')()
-
-elseif GameId == 8127951408 then
-    loadstring(game:HttpGet'https://raw.githubusercontent.com/pafapafa/GameScripts/main/Stage')()
-
-elseif GameId == 9584852943 then
-    loadstring(game:HttpGet'https://raw.githubusercontent.com/pafapafa/GameScripts/refs/heads/main/%2B1%20Speed%20Keyboard%20Escape')()
+if ScriptName then
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/pafapafa/GameScripts/main/' .. ScriptName))()
 else
-    LocalPlayer:Kick("Not Support Game")
+    LocalPlayer:Kick("Not Supported Game")
 end
