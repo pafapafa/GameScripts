@@ -22,7 +22,8 @@ local GameScripts = {
     [3310460039] = "BARRY'S%20PRISON%20RUN!%20(OBBY)",
     [2027832238] = "MMK",
     [8127951408] = "Stage",
-    [9584852943] = "%2B1%20Speed%20Keyboard%20Escape"
+    [9584852943] = "%2B1%20Speed%20Keyboard%20Escape",
+    [nil] = "Gugudan%20Battle"
 }
 
 local GameId = game.GameId
