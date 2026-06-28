@@ -1,5 +1,9 @@
-if not getgenv().TeleportQueued then
-    getgenv().TeleportQueued = true
+local env = getgenv() or getfenv
+if env.Loaded then return end
+env.Loaded = true
+
+if not env.TeleportQueued then
+    env.TeleportQueued = true
     local teleportFunc = queue_on_teleport or (syn and syn.queue_on_teleport)
     if teleportFunc then
         teleportFunc([[loadstring(game:HttpGet'https://raw.githubusercontent.com/pafapafa/GameScripts/main/Loader')()]])
