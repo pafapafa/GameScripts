@@ -1,3 +1,4 @@
+--!nocheck
 local env = getgenv() or getfenv
 if env.Loaded then return end
 env.Loaded = true
@@ -9,7 +10,9 @@ if not env.TeleportQueued then
         teleportFunc([[loadstring(game:HttpGet'https://raw.githubusercontent.com/pafapafa/GameScripts/main/Loader')()]])
     end
 end
---[[fucking shit]]
+
+--[[fucking shitttttt]]
+
 local GameScripts = {
     [9409415054] = "%2B1%20Jump%20Per%20Step",
     [9294646427] = "Bobsled%20Ride%20Down%20a%20Mountainside",
@@ -26,7 +29,7 @@ local GameScripts = {
     [8127951408] = "Stage",
     [9584852943] = "%2B1%20Speed%20Keyboard%20Escape",
     [10196985448] = "Korean%20Word%20Game",
-    [12345678] = "Gugudan%20Battle" --undefined
+    [12345678] = "Gugudan%20Battle" --undefined niga
 }
 
 local GameId = game.GameId
