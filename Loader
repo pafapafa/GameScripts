@@ -21,8 +21,6 @@ if not env.TeleportQueued then
     end
 end
 
---[[fucking shitttttt]]
-
 local GameScripts = {
     [9409415054] = "%2B1%20Jump%20Per%20Step",
     [9294646427] = "Bobsled%20Ride%20Down%20a%20Mountainside",
