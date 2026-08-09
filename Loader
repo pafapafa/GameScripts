@@ -1,13 +1,23 @@
 --!nocheck
-local env = getgenv() or getfenv
+local env = getgenv() or getfenv()
+
 if env.Loaded then return end
 env.Loaded = true
 
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+Players.PlayerRemoving:Connect(function(player)
+    if player == LocalPlayer then
+        env.Loaded = nil
+        env.TeleportQueued = nil
+    end
+end)
 if not env.TeleportQueued then
     env.TeleportQueued = true
     local teleportFunc = queue_on_teleport or (syn and syn.queue_on_teleport)
     if teleportFunc then
-        teleportFunc([[loadstring(game:HttpGet'https://raw.githubusercontent.com/pafapafa/GameScripts/main/Loader')()]])
+        teleportFunc([[loadstring(game:HttpGet("https://pagamescripts.xyz/Loader"))()]])
     end
 end
 
@@ -33,7 +43,6 @@ local GameScripts = {
 }
 
 local GameId = game.GameId
-local LocalPlayer = game:GetService("Players").LocalPlayer
 local ScriptName = GameScripts[GameId]
 
 if ScriptName then
