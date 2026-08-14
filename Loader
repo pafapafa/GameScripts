@@ -8,10 +8,10 @@ local nig = {
 local e = identifyexecutor()
 
 if table.find(nig, e) then
-    return game:GetService'Players'.LocalPlayer:Kick('Not Supported Executor')
+    return LocalPlayer:Kick('Not Supported Executor')
 end
 if env.Loaded then
-    return
+    return nil
 end
 
 env.Loaded = true
