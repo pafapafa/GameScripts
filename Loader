@@ -58,7 +58,7 @@ local ScriptName = GameScripts[GameId]
 if ScriptName then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/" .. ScriptName))()
 else
-    loadstring(game:HttpGet("https://"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/PAFA"))()
     while true do
         return nil
     end
