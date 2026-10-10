@@ -11,21 +11,21 @@ if table.find(nig, e) then
     return error("Not Supported Executor", 0)
 end
 
-if env.Loaded then
+if ENV.Loaded then
     return
 end
 
-env.Loaded = true
+ENV.Loaded = true
 
 Players.PlayerRemoving:Connect(function(player)
     if player == LocalPlayer then
-        env.Loaded = nil
-        env.TeleportQueued = nil
+        ENV.Loaded = nil
+        ENV.TeleportQueued = nil
     end
 end)
 
-if not env.TeleportQueued then
-    env.TeleportQueued = true
+if not ENV.TeleportQueued then
+    ENV.TeleportQueued = true
 
     local teleportFunc = queue_on_teleport or (syn and syn.queue_on_teleport)
     if teleportFunc then
