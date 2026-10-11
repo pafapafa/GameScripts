@@ -55,10 +55,6 @@ local GameScripts = {
 local GameId = game.GameId
 local ScriptName = GameScripts[GameId]
 
-if GameId == 6035872082 then
-    return LocalPlayer:Kick()
-end
-
 if ScriptName then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/" .. ScriptName))()
 else
