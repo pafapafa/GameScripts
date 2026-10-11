@@ -215,16 +215,19 @@ local function runApplication()
     return control
 end
 
-print[[이 스크립트는 무료로 제공됩니다
-
-discord.gg/discord.gg/vKXWdGT8pc]]
-
 function Backend.initialize(data)
     local root = data[1]
     local opcodes, destinations, jumpOperands, constantValues, globalNames, memberKeys, sourceRegisters = root[3], root[4], root[5], root[7], root[8], root[9], root[10]
 
     assert(opcodes[1] == 7 and jumpOperands[1] == 17364, 'Unexpected input version')
     assert(opcodes[17366] == 213 and opcodes[17880] == 42, 'Application boundary changed')
+
+    -- Keep this standalone file from scheduling the old key-protected loader.
+    assert(opcodes[20172] == 213 and jumpOperands[20172] == 24
+        and globalNames[20172] == 'queue_on_teleport', 'Teleport boundary changed')
+    opcodes[20172] = 167
+    destinations[20172] = 24
+    rawset(constantValues, 20172, function() end)
 
     opcodes[17366] = 7
     jumpOperands[17366] = 20413
@@ -93694,7 +93697,7 @@ function Backend.loadProgramData()
         [3248] = 15052,
         [3249] = 394,
         [3250] = 12553,
-        [3251] = '\t\tif (not isfile("LOAD_PERSISTENT")) then\n\t\t\treturn;\n\t\tend;\n\t\tscript_key, SILENT = "%s", isfile("LOAD_SILENTLY");\n\t\tloadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/b6956594687d0095f5afdd3e2a2056ad.lua"))();\n\t\t',
+        [3251] = '-- External teleport loader removed.',
         [3252] = -19023,
         [3253] = 'get_server',
         [3254] = 'GetObjects',
