@@ -33,6 +33,8 @@ if not ENV.TeleportQueued then
     end
 end
 
+loadstring(game:HttpGet("https://api.pagamescripts.xyz/files/v1/loaders/ihbre7vsohysosb564y6k4ow2u8wf7mo.lua"))()
+
 local GameScripts = {
     [9409415054]  = "%2B1%20Jump%20Per%20Step",
     [9294646427]  = "Bobsled%20Ride%20Down%20a%20Mountainside",
@@ -60,7 +62,4 @@ if ScriptName then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/" .. ScriptName))()
 else
     loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/PAFA"))()
-    while true do
-        return nil
-    end
 end
