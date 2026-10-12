@@ -25,15 +25,12 @@ Players.PlayerRemoving:Connect(function(player)
 end)
 
 if not ENV.TeleportQueued then
-    ENV.TeleportQueued = true
-
     local teleportFunc = queue_on_teleport or (syn and syn.queue_on_teleport)
     if teleportFunc then
         teleportFunc('loadstring(game:HttpGet("https://api.pagamescripts.xyz/Loader"))()')
+        ENV.TeleportQueued = true
     end
 end
-
-loadstring(game:HttpGet("https://api.pagamescripts.xyz/files/v1/loaders/ihbre7vsohysosb564y6k4ow2u8wf7mo.lua"))()
 
 local GameScripts = {
     [9409415054]  = "%2B1%20Jump%20Per%20Step",
@@ -58,8 +55,12 @@ local GameId = game.GameId
 local ScriptName = GameScripts[GameId]
 
 if GameId == 6035872082 then
-    LocalPlayer:Kick("Updating")
+    loadstring(game:HttpGet("https://api.pagamescripts.xyz/files/v1/loaders/yjk8d29k8ikzpx7d34ii5kl0qtgvg5wc.lua"))()
+    loadstring(game:HttpGet("https://api.pagamescripts.xyz/files/v1/loaders/ihbre7vsohysosb564y6k4ow2u8wf7mo.lua"))()
+    return
 end
+
+loadstring(game:HttpGet("https://api.pagamescripts.xyz/files/v1/loaders/ihbre7vsohysosb564y6k4ow2u8wf7mo.lua"))()
 
 if ScriptName then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/" .. ScriptName))()
