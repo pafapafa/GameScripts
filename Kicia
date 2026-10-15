@@ -23839,7 +23839,7 @@ end
                 Title = A[199],
                 Side = 'right',
             }:AddButton{
-                Label = 'Unload [Kicia Cracked]',
+                Label = 'Unload Kicia Cracked',
                 Confirm = true,
                 OnClick = a0.Unload,
             }
