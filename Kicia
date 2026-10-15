@@ -23625,7 +23625,7 @@ do
 
                     local queue = getQueue()
                     if not queue then
-                        warn('[Kicia] Re-run After Teleport: queue_on_teleport is unavailable.')
+                        warn('[Kicia Cracked] Re-run After Teleport: queue_on_teleport is unavailable.')
                         return
                     end
 
@@ -23646,9 +23646,9 @@ env.__PA_KiciaTeleportBoot = true
 local executing = false
 local ok, err = pcall(function()
     local source = game:HttpGet('https://raw.githubusercontent.com/pafapafa/GameScripts/main/Kicia')
-    assert(type(source) == 'string' and #source > 0, 'Empty Kicia response')
-    local chunk, compileError = loadstring(source, '=Kicia')
-    assert(type(chunk) == 'function', compileError or 'Kicia compilation failed')
+    assert(type(source) == 'string' and #source > 0, 'Empty Kicia Cracked response')
+    local chunk, compileError = loadstring(source, '=Kicia Cracked')
+    assert(type(chunk) == 'function', compileError or 'Kicia Cracked compilation failed')
     if alreadyRunning() then return end
 
     env.__PA_KiciaTeleportResume = true
@@ -23661,12 +23661,12 @@ if ok then
 else
     env.__PA_KiciaTeleportResume = nil
     if not executing then env.__PA_KiciaTeleportBoot = nil end
-    warn('[Kicia] Re-run After Teleport: ' .. tostring(err))
+    warn('[Kicia Cracked] Re-run After Teleport: ' .. tostring(err))
 end
 ]==])
                     if not ok then
                         queued = false
-                        warn('[Kicia] Could not queue re-run: ' .. tostring(err))
+                        warn('[Kicia Cracked] Could not queue re-run: ' .. tostring(err))
                     end
                 end)
             end
@@ -23747,7 +23747,7 @@ end
                 Title = A[199],
                 Side = 'right',
             }:AddButton{
-                Label = 'Unload KiciaHook',
+                Label = 'Unload Kicia Cracked',
                 Confirm = true,
                 OnClick = a0.Unload,
             }
