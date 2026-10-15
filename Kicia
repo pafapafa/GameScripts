@@ -82071,7 +82071,7 @@ do
 
             local b5 = bL.Menu.new{
                 Icon = b.LithiumLogo,
-                Title = string.format('[Kicia Cracked] | Rivals | %s', tostring'Premium Build'),
+                Title = string.format('Kicia Cracked | Rivals | %s', tostring'Premium Build'),
                 Directory = 'KiciaCracked/rivals',
                 Config = b4.ReactiveStoreAdapter,
                 ColorAnimation = b4.ColorAnimation,
