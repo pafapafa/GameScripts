@@ -43,11 +43,88 @@
 
 ]]
 
+local function waitForKiciaClient(state)
+    local players = game:GetService('Players')
+    local deadline = os.clock() + 90
+
+    local function await(stage, check)
+        state.stage = stage
+        repeat
+            local value = check()
+            if value then return value end
+            task.wait(0.25)
+        until os.clock() >= deadline
+        error('Startup timed out at ' .. stage .. '; Kicia was not started.', 0)
+    end
+
+    await('initial replication', function() return game:IsLoaded() end)
+    if game.GameId ~= 6035872082 then
+        error('This script is for Rivals. Kicia was not started.', 0)
+    end
+    local player = await('LocalPlayer', function() return players.LocalPlayer end)
+    local scripts = await('PlayerScripts', function() return player:FindFirstChild('PlayerScripts') end)
+    local controllers = await('PlayerScripts.Controllers', function() return scripts:FindFirstChild('Controllers') end)
+    local module = await('PlayerDataController module', function() return controllers:FindFirstChild('PlayerDataController') end)
+    assert(module:IsA('ModuleScript'), 'PlayerDataController is not a ModuleScript.')
+
+    -- Prefer the game's already-loaded module; do not force its UI controllers to boot.
+    local env = getgenv()
+    local enumerate = getloadedmodules or env.getloadedmodules
+    local canEnumerate = false
+    if type(enumerate) == 'function' then
+        local ok, modules = pcall(enumerate)
+        canEnumerate = ok and type(modules) == 'table'
+    end
+    if canEnumerate then
+        await('game loading PlayerDataController', function()
+            local ok, modules = pcall(enumerate)
+            if not ok or type(modules) ~= 'table' then
+                error('Cannot inspect loaded modules: ' .. tostring(modules), 0)
+            end
+            for _, item in pairs(modules) do
+                if item == module then return true end
+            end
+        end)
+    else
+        -- Executors without module enumeration get a conservative structural gate.
+        await('character, camera and PlayerGui', function()
+            local character = player.Character
+            return character and character:FindFirstChildOfClass('Humanoid')
+                and character:FindFirstChild('HumanoidRootPart')
+                and workspace.CurrentCamera and player:FindFirstChildOfClass('PlayerGui')
+        end)
+        local notBefore = os.clock() + 3
+        await('client startup settling', function() return os.clock() >= notBefore end)
+    end
+
+    -- Require only this data controller once. Retrying all game modules can leave
+    -- partially initialized singletons and does not repair a failed game bootstrap.
+    local completed, ok, controller = false
+    task.spawn(function()
+        ok, controller = pcall(require, module)
+        completed = true
+    end)
+    -- A late result after timeout cannot start Kicia. Do not cancel the game's
+    -- own ModuleScript initializer while it may still be yielding.
+    await('reading PlayerDataController', function() return completed end)
+    if not ok then
+        error(module:GetFullName() .. ': ' .. tostring(controller), 0)
+    end
+    assert(type(controller) == 'table', 'PlayerDataController did not return a table.')
+    await('PlayerDataController.CurrentData', function()
+        local data = rawget(controller, 'CurrentData')
+        return type(data) == 'table' and rawget(data, 'Data') ~= nil
+            and type(data.Get) == 'function'
+    end)
+    -- Let the game's settings listeners run before loading dependent UI modules.
+    local notBefore = os.clock() + 1
+    await('player data settling', function() return os.clock() >= notBefore end)
+    return true
+end
+
+local function runKicia(...)
 if getgenv().KiciaCracked and getgenv().KiciaCracked.Unload then
     pcall(getgenv().KiciaCracked.Unload)
-end
-if not game:IsLoaded() then
-    game.Loaded:Wait()
 end
 
 local b = {
@@ -57,6 +134,16 @@ local b = {
 }
 
 getgenv().KiciaCracked = b
+
+function b.requireModule(module)
+    local path = module:GetFullName()
+    b.startupStage = 'require ' .. path
+    local ok, result = pcall(require, module)
+    if not ok then
+        error('[Kicia Cracked] Failed to require ' .. path .. ': ' .. tostring(result), 0)
+    end
+    return result
+end
 
 local d, f, g, h, i, j, m, n = game:GetService'Players', game:GetService'ReplicatedStorage', game:GetService'RunService', game:GetService'UserInputService', game:GetService'CollectionService', game:GetService'HttpService', game:GetService'SoundService', game:GetService'Lighting'
 local o, q, r = d.LocalPlayer, rawget, rawset
@@ -23632,36 +23719,41 @@ do
                     queued = true
                     local ok, err = pcall(queue, [==[
 local env = getgenv()
-if not game:IsLoaded() then game.Loaded:Wait() end
-if game.GameId ~= 6035872082 then return end
-
-local function alreadyRunning()
-    local running = env.KiciaCracked
-    return type(running) == 'table' and not running.destroyed
+local function running()
+    local value = env.KiciaCracked
+    return type(value) == 'table' and not value.destroyed and value.ready == true
 end
-
-if alreadyRunning() or env.__PA_KiciaTeleportBoot then return end
-env.__PA_KiciaTeleportBoot = true
-
-local executing = false
-local ok, err = pcall(function()
+if running() or env.__PA_KiciaTeleportBoot then return end
+local token = {}
+env.__PA_KiciaTeleportBoot = token
+local stage = 'download'
+local function trace(err)
+    if debug and type(debug.traceback) == 'function' then
+        return debug.traceback(tostring(err), 2)
+    end
+    return tostring(err)
+end
+local ok, err = xpcall(function()
+    local deadline = os.clock() + 90
+    while not game:IsLoaded() and os.clock() < deadline do task.wait(0.25) end
+    assert(game:IsLoaded(), 'Initial replication timed out; Kicia was not started.')
+    if game.GameId ~= 6035872082 then return end
     local source = game:HttpGet('https://raw.githubusercontent.com/pafapafa/GameScripts/main/Kicia')
-    assert(type(source) == 'string' and #source > 0, 'Empty Kicia Cracked response')
+    assert(type(source) == 'string' and #source > 0, 'Empty Kicia response')
+    stage = 'compile'
     local chunk, compileError = loadstring(source, '=Kicia Cracked')
-    assert(type(chunk) == 'function', compileError or 'Kicia Cracked compilation failed')
-    if alreadyRunning() then return end
-
+    assert(type(chunk) == 'function', compileError or 'Kicia compilation failed')
+    if running() then return end
     env.__PA_KiciaTeleportResume = true
-    executing = true
-    chunk(env)
-end)
-
-if ok then
-    env.__PA_KiciaTeleportBoot = nil
-else
+    stage = 'startup'
+    local result = chunk(env)
+    assert(type(result) == 'table' and result.ready == true and not result.destroyed,
+        'Kicia did not finish startup. Check that the updated full source is deployed.')
+end, trace)
+if env.__PA_KiciaTeleportBoot == token then env.__PA_KiciaTeleportBoot = nil end
+if not ok then
     env.__PA_KiciaTeleportResume = nil
-    if not executing then env.__PA_KiciaTeleportBoot = nil end
-    warn('[Kicia Cracked] Re-run After Teleport: ' .. tostring(err))
+    warn('[Kicia Cracked] Re-run After Teleport (' .. stage .. '): ' .. tostring(err))
 end
 ]==])
                     if not ok then
@@ -23747,7 +23839,7 @@ end
                 Title = A[199],
                 Side = 'right',
             }:AddButton{
-                Label = 'Unload Kicia Cracked',
+                Label = 'Unload [Kicia Cracked]',
                 Confirm = true,
                 OnClick = a0.Unload,
             }
@@ -24966,14 +25058,18 @@ do
                         return nil
                     end
                 else
-                    aZ = as:WaitForChild(aY, math.huge)
+                    aZ = as:WaitForChild(aY, 30)
+                    if aZ == nil then
+                        error('[Kicia Cracked] Missing required instance: '
+                            .. as:GetFullName() .. '.' .. tostring(aY), 0)
+                    end
                 end
 
                 as = T(aZ)
             end
 
             if aw then
-                return require(as)
+                return b.requireModule(as)
             end
 
             return T(as)
@@ -25034,7 +25130,7 @@ do
             'RequestProfile',
         }), as(as(a0, 'Misc'), 'ShootingRangeTrashItems'), as(aZ, 'ReplicatedController', true), as(aU, 'ControlsController', true), as(aU, 'FighterController', true), as(aU, 'MechanicsController', true), as(aU, 'EnemyController', true), as(aU, 'ShootingRangeController', true), as(aU, 'ArcadeController', A[34]), as(aU, 'CameraController', true), as(aU, 'DuelController', true), as(aU, 'ComplianceController', true), as(aZ, 'UserInterface')
         local bm, bn = as(bl, 'Equipment', A[34]), as(bl, 'Lobby')
-        local bo, bp, bq, br, bs, bt, bu, bv, bw, bx, by, bz, bA, bB, bC, bD, bE, bF, bG, bH, bI, bJ, bK, bL, bM, bN, bO, bP, bQ, bR, bS, bT, bU, bV = require(bn), as(bl, 'Pages', true), as(bn, 'Matchmaking', true), as(aY, 'CONSTANTS', true), as(aY, 'EnumLibrary', true), as(aY, 'InputLibrary', true), as(aY, 'SeasonLibrary', true), as(aY, 'CosmeticLibrary', true), as(aY, 'ItemLibrary', true), as(aY, 'DuelLibrary', true), as(aY, 'Utility', true), as(aY, 'PlayerDataUtility', true), as(aY, 'TaskLibrary', true), as(aY, 'ReplicatedClass', true), as(aY, 'OutOfBoundsMachine', true), as(aU, 'PlayerDataController', true), as(aU, 'MatchmakingController', true), as(aU, 'LeaderboardController', A[34]), as(a_, 'ClientEntity', true), as(a_, 'ClientDueler', true), as(a_, {
+        local bo, bp, bq, br, bs, bt, bu, bv, bw, bx, by, bz, bA, bB, bC, bD, bE, bF, bG, bH, bI, bJ, bK, bL, bM, bN, bO, bP, bQ, bR, bS, bT, bU, bV = b.requireModule(bn), as(bl, 'Pages', true), as(bn, 'Matchmaking', true), as(aY, 'CONSTANTS', true), as(aY, 'EnumLibrary', true), as(aY, 'InputLibrary', true), as(aY, 'SeasonLibrary', true), as(aY, 'CosmeticLibrary', true), as(aY, 'ItemLibrary', true), as(aY, 'DuelLibrary', true), as(aY, 'Utility', true), as(aY, 'PlayerDataUtility', true), as(aY, 'TaskLibrary', true), as(aY, 'ReplicatedClass', true), as(aY, 'OutOfBoundsMachine', true), as(aU, 'PlayerDataController', true), as(aU, 'MatchmakingController', true), as(aU, 'LeaderboardController', A[34]), as(a_, 'ClientEntity', true), as(a_, 'ClientDueler', true), as(a_, {
             'ClientFighter',
             'ClientFighterCharacter',
         }, true), as(a_, {
@@ -44360,7 +44456,7 @@ do
             X(A[56])
 
             local bd = a9.Humanoid
-            local be = require(bb).new(bd)
+            local be = b.requireModule(bb).new(bd)
 
             be:SetSerial(ba)
 
@@ -48321,7 +48417,7 @@ do
 
                 X(2)
 
-                local bq = require(bm)
+                local bq = b.requireModule(bm)
 
                 X(bp)
                 fn37(bn)
@@ -52315,7 +52411,7 @@ do
                     DefaultConfig = bb,
                     CurrentVersion = A[56],
                     Migrations = {fn36},
-                    SavePath = 'kiciahook/rivals_v3/cosmetics/states',
+                    SavePath = 'KiciaCracked/rivals/cosmetics',
                     Deserialize = fn38,
                 },
                 _stateConfig = ba,
@@ -52494,50 +52590,56 @@ do
             return aU.VoidOk
         end
         a6.LoadCoreConfig = function(a8)
-            local a9 = a8._configManager:LoadFromFile'core_config'
+            local manager = a8._configManager
+            if not manager:Exists('core_config') then
+                local legacy = 'kiciahook/rivals_v3/cosmetics/states/core_config.json'
+                local created, result = pcall(function()
+                    if isfile(legacy) then
+                        local imported = manager:FromJson(readfile(legacy))
+                        if not imported.Ok then return imported end
+                        -- Copy a valid legacy file without deleting or overwriting it.
+                        return manager:SaveToFile('core_config', true)
+                    end
+                    return manager:SaveDefaultToFile('core_config', true)
+                end)
+                if not created or not result.Ok then
+                    a8:_RestoreSessionState()
+                    a8:_ConnectAutoSave()
+                    local detail = created and result.Error.Detail or tostring(result)
+                    return aU.err('CosmeticsConfig', 'LoadCoreConfig',
+                        'Failed to initialize core config: ' .. tostring(detail))
+                end
+            end
 
-            if not a9.Ok then
+            local loaded, a9 = pcall(manager.LoadFromFile, manager, 'core_config')
+            if not loaded or not a9.Ok then
                 a8:_RestoreSessionState()
                 a8:_ConnectAutoSave()
-
-                return aU.err('CosmeticsConfig', 'LoadCoreConfig', string.format('Failed to load core config: %s', tostring(a9.Error.Detail)))
+                local detail = loaded and a9.Error.Detail or tostring(a9)
+                return aU.err('CosmeticsConfig', 'LoadCoreConfig',
+                    'Failed to load core config: ' .. tostring(detail))
             end
 
             local ba = a9.Value
-
             a8._data = ba
-
             local bb = ba.AutoLoadPresetName
             local bc, bd, be = ba.AutoLoad and bb ~= nil, false
 
             if bc then
                 local bf = a8._stateConfig:Load(bb)
-
                 bd = bf.Ok
-                be = nil
-
                 if not bf.Ok then
-                    local bg, bh = tostring, bf.Error.Detail
-
-                    be = aU.err('CosmeticsConfig', 'LoadCoreConfig', string.format('Failed to auto-load preset "%s": %s', tostring(bb), bg(bh)))
+                    be = aU.err('CosmeticsConfig', 'LoadCoreConfig',
+                        string.format('Failed to auto-load preset "%s": %s',
+                            tostring(bb), tostring(bf.Error.Detail)))
                 end
             end
 
             local bf
-
-            if not bd then
-                bf = a8:_RestoreSessionState()
-            end
-
+            if not bd then bf = a8:_RestoreSessionState() end
             a8:_ConnectAutoSave()
-
-            if be ~= nil then
-                return be
-            end
-            if bf ~= nil then
-                return bf
-            end
-
+            if be ~= nil then return be end
+            if bf ~= nil then return bf end
             return aU.VoidOk
         end
         a6.SetPresetName = function(a8, a9)
@@ -81969,7 +82071,7 @@ do
 
             local b5 = bL.Menu.new{
                 Icon = b.LithiumLogo,
-                Title = string.format('Kicia Cracked | Rivals | %s', tostring'Premium Build'),
+                Title = string.format('[Kicia Cracked] | Rivals | %s', tostring'Premium Build'),
                 Directory = 'KiciaCracked/rivals',
                 Config = b4.ReactiveStoreAdapter,
                 ColorAnimation = b4.ColorAnimation,
@@ -88776,3 +88878,57 @@ function b.Unload()
 end
 
 C.j1()(bR)
+return b
+end
+
+local startupArgs = table.pack(...)
+local startupEnv = getgenv()
+local lastStartup = startupEnv.__KiciaStartupState
+if type(lastStartup) == 'table'
+    and (lastStartup.status == 'waiting' or lastStartup.status == 'starting') then
+    return lastStartup
+end
+
+local startupState = {build = 'kicia-startup-2', status = 'waiting', stage = 'preflight'}
+startupEnv.__KiciaStartupState = startupState
+local previousKicia = startupEnv.KiciaCracked
+
+local function startupTrace(err)
+    if debug and type(debug.traceback) == 'function' then
+        return debug.traceback(tostring(err), 2)
+    end
+    return tostring(err)
+end
+
+local startupOK, startupResult = xpcall(function()
+    waitForKiciaClient(startupState)
+    startupState.status, startupState.stage = 'starting', 'Kicia initialization'
+    return runKicia(table.unpack(startupArgs, 1, startupArgs.n))
+end, startupTrace)
+
+if not startupOK then
+    startupState.status, startupState.error = 'error', tostring(startupResult)
+    local partial = startupEnv.KiciaCracked
+    if type(partial) == 'table' and partial ~= previousKicia then
+        if type(partial.Unload) == 'function' then
+            pcall(partial.Unload)
+        else
+            partial.destroyed = true
+            for _, cleanup in ipairs(partial.cleanups or {}) do pcall(cleanup) end
+            if partial.GlobalTrove then
+                pcall(function() partial.GlobalTrove:Destroy() end)
+            end
+        end
+        for _, connection in ipairs(partial.connections or {}) do
+            pcall(function() connection:Disconnect() end)
+        end
+        if startupEnv.KiciaCracked == partial then startupEnv.KiciaCracked = nil end
+    end
+    startupEnv.__PA_KiciaTeleportResume = nil
+    error('[Kicia Cracked] ' .. startupState.stage .. ': ' .. startupState.error, 0)
+end
+
+startupState.status, startupState.stage = 'ready', 'ready'
+startupResult.ready = true
+startupResult.build = startupState.build
+return startupResult
