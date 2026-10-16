@@ -56,11 +56,11 @@ local ScriptName = GameScripts[GameId]
 
 if GameId == 6035872082 then
     loadstring(game:HttpGet("https://api.pagamescripts.xyz/files/v1/loaders/yjk8d29k8ikzpx7d34ii5kl0qtgvg5wc.lua"))()
-    loadstring(game:HttpGet("https://api.pagamescripts.xyz/files/v1/loaders/ihbre7vsohysosb564y6k4ow2u8wf7mo.lua"))()
+  --loadstring(game:HttpGet("https://api.pagamescripts.xyz/files/v1/loaders/ihbre7vsohysosb564y6k4ow2u8wf7mo.lua"))()
     return
 end
 
-loadstring(game:HttpGet("https://api.pagamescripts.xyz/files/v1/loaders/ihbre7vsohysosb564y6k4ow2u8wf7mo.lua"))()
+--loadstring(game:HttpGet("https://api.pagamescripts.xyz/files/v1/loaders/ihbre7vsohysosb564y6k4ow2u8wf7mo.lua"))()
 
 if ScriptName then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/pafapafa/GameScripts/main/" .. ScriptName))()
