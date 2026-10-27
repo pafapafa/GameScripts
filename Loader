@@ -1,4 +1,5 @@
-local ENV = getgenv() or getfenv()
+const shit = [[ass]]
+local local ENV = getgenv() or getfenv()
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local e = identifyexecutor()
