@@ -1,4 +1,4 @@
-const shit = [[ass]]
+const shit = [[dont skid nig]]
 local ENV = getgenv() or getfenv()
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
