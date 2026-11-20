@@ -25,7 +25,7 @@ Players.PlayerRemoving:Connect(function(player)
     end
 end)
 
-if game.GameId ~= 6035872082 and game.GameId ~= 2027832238 and not ENV.TeleportQueued then
+if game.GameId ~= 6035872082 and not ENV.TeleportQueued then
     local teleportFunc = queue_on_teleport or (syn and syn.queue_on_teleport)
     if teleportFunc then
         teleportFunc('loadstring(game:HttpGet("https://api.pagamescripts.xyz/Loader"))()')
